@@ -26,19 +26,24 @@ const autoSlide = () => {
 
 //Fetch data on request
 const fetchData = userInput => {
-  userInput? fetchQuery = userInput: fetchQuery = "question"
+  userInput ? fetchQuery = userInput : fetchQuery = "question"
   fetch(`https://api.unsplash.com/search/photos/?query=${fetchQuery}&client_id=${ACCESS_TOKEN}`)
   .then (res => res.json())
   .then(photosFromServer => {
     photos = photosFromServer.results
+    console.log(photos)
     photos.length > 0 ? renderImage(photos[currentPhotoIndex]) : console.log("no data")
   });
 }
 
 //FetchData on landing
-fetchQuery = "question"
-fetchData(fetchQuery)
-autoSlide()
+let fetchQuery = "question"
+window.onload = () => {
+  fetchData(fetchQuery)
+  userInput.focus();
+  autoSlide()
+
+}
 
 //Render to DOM
 const renderImage = (image, direction) => {
@@ -65,7 +70,7 @@ const renderImage = (image, direction) => {
   carouselContainer.append(img)
   setTimeout(function () {
     img.style.opacity = 1
-  },10)
+  },50)
 }
 
 //Event listeners
@@ -77,9 +82,7 @@ navRight.addEventListener("click", () => {
   incrementPhotoIndex()
   renderImage(photos[currentPhotoIndex], 1)
 })
-userInput.addEventListener("keyup", () => {
-  fetchData(userInput.value)
-})
+
 
 document.addEventListener("keyup", e => {
   if (e.key == 'ArrowLeft'){
@@ -90,5 +93,19 @@ document.addEventListener("keyup", e => {
     //right arrow
     incrementPhotoIndex()
     renderImage(photos[currentPhotoIndex], 1)
+  } else {
+    fetchData(userInput.value)
   }
 })
+
+
+//Second API source ..under constructiom
+const fetchD = () => {
+  fetch(`https://pixabay.com/api/?key=14380349-2fb6191091c3327c31c50d39a&q=yellow+flowers&image_type=photo`)
+  .then (res => res.json())
+  .then(phFrSr => {
+    ph = phFrSr
+    console.log("pixabay: " + ph)
+  })
+}
+fetchD()
